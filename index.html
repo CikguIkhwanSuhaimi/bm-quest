@@ -323,6 +323,7 @@
   <div id="menu-buttons">
     <button id="menu-play-btn">▶️ Main Sekarang</button>
     <button id="menu-howto-btn">📖 Cara Bermain</button>
+    <button id="menu-portal-main-btn" style="background: linear-gradient(180deg, #ffd75e, #8a6a2f); color:#2a1a00;">🏠 Portal Utama</button>
   </div>
   <p id="menu-loading">Memuatkan aset...</p>
   <div id="menu-quote">
@@ -1380,6 +1381,10 @@ document.getElementById('menu-exit-btn').addEventListener('click', () => {
   }, 300);
 });
 document.getElementById('menu-portal-btn').addEventListener('click', () => {
+  try { saveProgress(); } catch (e) {}
+  window.location.href = 'https://cikguikhwansuhaimi.github.io/';
+});
+document.getElementById('menu-portal-main-btn').addEventListener('click', () => {
   try { saveProgress(); } catch (e) {}
   window.location.href = 'https://cikguikhwansuhaimi.github.io/';
 });
