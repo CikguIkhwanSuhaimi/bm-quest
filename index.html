@@ -367,6 +367,7 @@
         <button id="menu-admin-btn">🔓 Mode Admin: OFF</button>
         <button id="menu-reset-btn">🔄 Mula Semula (Set Semula Progres)</button>
         <button id="menu-exit-btn">🚪 Keluar dari Permainan</button>
+        <button id="menu-portal-btn" style="background:#8a6a2f; color:#fff;">🏠 Portal Utama</button>
         <button id="menu-cancel-btn">Batal</button>
       </div>
       <div id="menu-reset-confirm" style="display:none;">
@@ -435,6 +436,7 @@
     <h2>Nyawa Habis!</h2>
     <p>Cuba lagi ya.</p>
     <button onclick="location.reload()">Main Semula</button>
+    <button id="gameover-portal-btn" style="background:#8a6a2f; color:#fff;">🏠 Portal Utama</button>
   </div>
 
   <div id="credit-footer">Dibuat dengan kasih sayang oleh Cikgu Ikhwan x Claude</div>
@@ -1376,6 +1378,14 @@ document.getElementById('menu-exit-btn').addEventListener('click', () => {
   setTimeout(() => {
     document.getElementById('menu-exit-msg').style.display = 'block';
   }, 300);
+});
+document.getElementById('menu-portal-btn').addEventListener('click', () => {
+  try { saveProgress(); } catch (e) {}
+  window.location.href = 'https://cikguikhwansuhaimi.github.io/';
+});
+document.getElementById('gameover-portal-btn').addEventListener('click', () => {
+  try { saveProgress(); } catch (e) {}
+  window.location.href = 'https://cikguikhwansuhaimi.github.io/';
 });
 
 let assetsReady = false;
