@@ -48,8 +48,14 @@
     justify-content: center; font-size: 18px; z-index: 6; cursor: pointer;
   }
 
-  #menu-btn {
+  #sfx-toggle-btn {
     position: absolute; top: 160px; right: 12px; width: 42px; height: 42px; border-radius: 10px;
+    background: rgba(20,30,55,0.9); border: 2px solid #3a5a8a; display: flex; align-items: center;
+    justify-content: center; font-size: 18px; z-index: 6; cursor: pointer;
+  }
+
+  #menu-btn {
+    position: absolute; top: 210px; right: 12px; width: 42px; height: 42px; border-radius: 10px;
     background: rgba(20,30,55,0.9); border: 2px solid #3a5a8a; display: flex; align-items: center;
     justify-content: center; font-size: 18px; z-index: 6; cursor: pointer;
   }
@@ -306,6 +312,7 @@
 
   <div id="worldmap-btn">🗺️</div>
   <div id="music-toggle-btn">🔊</div>
+  <div id="sfx-toggle-btn">🔔</div>
   <div id="menu-btn">☰</div>
   <div id="menu-screen">
     <div id="menu-box">
@@ -937,10 +944,10 @@ document.getElementById('shop-buy-btn').addEventListener('click', () => {
     document.getElementById('coin-text').innerText = coins;
     document.getElementById('hp-text').innerText = hp + '/' + maxHp;
     document.getElementById('shop-coin-text').innerText = 'Koin anda: ' + coins;
-    feedback.style.color = '#4ade80';
+    feedback.style.color = '#4ade80'; playSfx('correct');
     feedback.innerText = 'Berjaya beli! Nyawa maksimum naik ke ' + maxHp + '.';
   } else {
-    feedback.style.color = '#f87171';
+    feedback.style.color = '#f87171'; playSfx('wrong');
     feedback.innerText = 'Koin tak cukup! Kumpul lagi koin dalam peta.';
   }
 });
@@ -951,10 +958,10 @@ document.getElementById('shop-buy-skip-btn').addEventListener('click', () => {
     skipCharges++;
     document.getElementById('coin-text').innerText = coins;
     document.getElementById('shop-coin-text').innerText = 'Koin anda: ' + coins;
-    feedback.style.color = '#4ade80';
+    feedback.style.color = '#4ade80'; playSfx('correct');
     feedback.innerText = `Berjaya beli! Caj Skip Soalan: ${skipCharges}.`;
   } else {
-    feedback.style.color = '#f87171';
+    feedback.style.color = '#f87171'; playSfx('wrong');
     feedback.innerText = 'Koin tak cukup! Kumpul lagi koin dalam peta.';
   }
 });
@@ -965,10 +972,10 @@ document.getElementById('shop-buy-invincible-btn').addEventListener('click', () 
     invincibleUntil = Date.now() + 20000;
     document.getElementById('coin-text').innerText = coins;
     document.getElementById('shop-coin-text').innerText = 'Koin anda: ' + coins;
-    feedback.style.color = '#4ade80';
+    feedback.style.color = '#4ade80'; playSfx('correct');
     feedback.innerText = 'Kuasa Invincible aktif selama 20 saat!';
   } else {
-    feedback.style.color = '#f87171';
+    feedback.style.color = '#f87171'; playSfx('wrong');
     feedback.innerText = 'Koin tak cukup! Kumpul lagi koin dalam peta.';
   }
 });
@@ -1287,6 +1294,91 @@ function toggleMusic() {
   document.getElementById('music-toggle-btn').innerText = musicEnabled ? '🔊' : '🔇';
 }
 document.getElementById('music-toggle-btn').addEventListener('click', toggleMusic);
+document.getElementById('sfx-toggle-btn').addEventListener('click', toggleSfx);
+
+// ====== SFX (kesan bunyi dijana procedural guna Web Audio API - tiada fail luar, sama prinsip macam muzik latar) ======
+let sfxGain = null;
+let sfxEnabled = true;
+function ensureSfxGain() {
+  if (!audioCtx) return null;
+  if (!sfxGain) {
+    sfxGain = audioCtx.createGain();
+    sfxGain.gain.value = sfxEnabled ? 0.5 : 0;
+    sfxGain.connect(audioCtx.destination);
+  }
+  return sfxGain;
+}
+// Nada tunggal (oscillator) - untuk chime, bip, tone naik/turun
+function sfxTone(freq, startOffset, duration, type, vol, glideTo) {
+  const gainNode = ensureSfxGain();
+  if (!gainNode) return;
+  const t0 = audioCtx.currentTime + startOffset;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = type || 'sine';
+  osc.frequency.setValueAtTime(freq, t0);
+  if (glideTo) osc.frequency.exponentialRampToValueAtTime(glideTo, t0 + duration);
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(vol, t0 + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.001, t0 + duration);
+  osc.connect(g); g.connect(gainNode);
+  osc.start(t0); osc.stop(t0 + duration + 0.05);
+}
+// Bunyi noise (letupan pendek / gesekan) - asas untuk impact, pecah, tarik lastik
+let sfxNoiseBuffer = null;
+function getNoiseBuffer() {
+  if (sfxNoiseBuffer) return sfxNoiseBuffer;
+  const len = audioCtx.sampleRate * 1;
+  const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+  sfxNoiseBuffer = buf;
+  return buf;
+}
+function sfxNoise(startOffset, duration, vol, filterFreq, filterType) {
+  const gainNode = ensureSfxGain();
+  if (!gainNode) return;
+  const t0 = audioCtx.currentTime + startOffset;
+  const src = audioCtx.createBufferSource();
+  src.buffer = getNoiseBuffer();
+  const filt = audioCtx.createBiquadFilter();
+  filt.type = filterType || 'lowpass';
+  filt.frequency.setValueAtTime(filterFreq || 1200, t0);
+  const g = audioCtx.createGain();
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(vol, t0 + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.001, t0 + duration);
+  src.connect(filt); filt.connect(g); g.connect(gainNode);
+  src.start(t0); src.stop(t0 + duration + 0.05);
+}
+// Katalog SFX - satu tempat untuk semua kesan bunyi permainan (BM Quest sahaja - Kosa Rimba & Slice Kata tunggu dulu)
+const SFX_LIB = {
+  correct: () => { sfxTone(523.25, 0, 0.12, 'triangle', 0.35); sfxTone(783.99, 0.09, 0.22, 'triangle', 0.35); },
+  wrong: () => { sfxTone(220, 0, 0.16, 'sawtooth', 0.25, 140); sfxTone(160, 0.12, 0.22, 'sawtooth', 0.2, 100); },
+  coin: () => { sfxTone(987.77, 0, 0.06, 'square', 0.22); sfxTone(1318.51, 0.05, 0.14, 'square', 0.22); },
+  pickup: () => { sfxTone(660, 0, 0.08, 'triangle', 0.3, 990); },
+  key: () => { sfxTone(440, 0, 0.09, 'square', 0.25); sfxTone(660, 0.07, 0.09, 'square', 0.25); sfxTone(880, 0.14, 0.18, 'square', 0.28); },
+  hit: () => { sfxNoise(0, 0.14, 0.4, 400, 'lowpass'); sfxTone(140, 0, 0.14, 'sawtooth', 0.25, 60); },
+  gameover: () => { sfxTone(392, 0, 0.2, 'sawtooth', 0.3, 260); sfxTone(294, 0.18, 0.22, 'sawtooth', 0.28, 180); sfxTone(196, 0.38, 0.4, 'sawtooth', 0.28, 90); },
+  door: () => { sfxNoise(0, 0.3, 0.18, 500, 'lowpass'); sfxTone(180, 0, 0.3, 'sine', 0.2, 90); },
+  click: () => { sfxTone(700, 0, 0.05, 'square', 0.15); },
+  // --- placeholder untuk mekanik akan datang (lastik/binaan kayu) - tinggal panggil bila mekanik siap ---
+  slingPull: () => { sfxNoise(0, 0.18, 0.16, 900, 'bandpass'); },
+  slingRelease: () => { sfxTone(300, 0, 0.1, 'sawtooth', 0.3, 900); },
+  woodImpact: () => { sfxNoise(0, 0.1, 0.35, 350, 'lowpass'); sfxTone(110, 0, 0.08, 'triangle', 0.2, 70); },
+  woodBreak: () => { sfxNoise(0, 0.22, 0.4, 700, 'lowpass'); sfxNoise(0.03, 0.18, 0.3, 1800, 'highpass'); }
+};
+function playSfx(name) {
+  if (!audioCtx || !sfxEnabled) return;
+  const fn = SFX_LIB[name];
+  if (fn) { try { fn(); } catch (e) {} }
+}
+function toggleSfx() {
+  sfxEnabled = !sfxEnabled;
+  if (sfxGain) sfxGain.gain.value = sfxEnabled ? 0.5 : 0;
+  const btn = document.getElementById('sfx-toggle-btn');
+  if (btn) btn.innerText = sfxEnabled ? '🔔' : '🔕';
+}
 
 document.getElementById('menu-btn').addEventListener('click', () => {
   document.getElementById('menu-main-options').style.display = 'block';
@@ -2654,6 +2746,7 @@ function updateHub() {
       c.obj.setVisible(false);
       coins++;
       document.getElementById('coin-text').innerText = coins;
+      playSfx('coin');
     }
   });
   fetchItems.forEach(f => {
@@ -2663,6 +2756,7 @@ function updateHub() {
       f.obj.setVisible(false);
       fetchCollected++;
       updateMissionText();
+      playSfx('pickup');
     }
   });
 
@@ -2804,13 +2898,13 @@ function openRohQuestion(gate) {
 function checkRohAnswer(gate, idx, q) {
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Terima kasih sudah bantu saya.';
+    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Terima kasih sudah bantu saya.';
     rohHelped[gate.zoneIndex] = true;
     gate.setTint(0xffffff); gate.setAlpha(0.35);
     updateMissionText();
     setTimeout(() => { document.getElementById('question-box').style.display = 'none'; }, 900);
   } else {
-    feedback.style.color = '#f87171'; feedback.innerText = 'Belum tepat, cuba fikir/rujuk semula.';
+    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Belum tepat, cuba fikir/rujuk semula.';
   }
 }
 
@@ -2834,7 +2928,7 @@ function banditTimeout(gate) {
   clearBattleTimer();
   loseHp(1);
   const feedback = document.getElementById('feedback');
-  feedback.style.color = '#f87171'; feedback.innerText = 'Masa tamat! ' + banditNames[gate.stageIndex] + ' serang - nyawa berkurang. Cuba lagi!';
+  feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Masa tamat! ' + banditNames[gate.stageIndex] + ' serang - nyawa berkurang. Cuba lagi!';
   shakeCamera(0.01);
   setTimeout(() => { if (hp > 0) openBanditQuestion(gate); }, 1100);
 }
@@ -2843,7 +2937,7 @@ function checkBanditAnswer(gate, idx, q) {
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
     clearBattleTimer();
-    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! ' + banditNames[gate.stageIndex] + ' berundur.';
+    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! ' + banditNames[gate.stageIndex] + ' berundur.';
     banditDefeated[gate.stageIndex] = true;
     gate.setTint(0x888888); gate.setAlpha(0.4);
     updateMissionText();
@@ -2856,7 +2950,7 @@ function checkBanditAnswer(gate, idx, q) {
     setTimeout(() => { document.getElementById('question-box').style.display = 'none'; }, 900);
   } else {
     loseHp(1);
-    feedback.style.color = '#f87171'; feedback.innerText = 'Belum tepat - nyawa berkurang! Cuba lagi.';
+    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Belum tepat - nyawa berkurang! Cuba lagi.';
     shakeCamera(0.01);
   }
 }
@@ -2879,7 +2973,7 @@ function openKomsasQuestion(gate) {
 function checkKomsasAnswer(gate, idx, q) {
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Ilmu KOMSAS bertambah.';
+    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Ilmu KOMSAS bertambah.';
     komsasSolved[gate.stationIndex] = true;
     coins += 15;
     document.getElementById('coin-text').innerText = coins;
@@ -2887,7 +2981,7 @@ function checkKomsasAnswer(gate, idx, q) {
     saveProgress();
     setTimeout(() => { document.getElementById('question-box').style.display = 'none'; }, 900);
   } else {
-    feedback.style.color = '#f87171'; feedback.innerText = 'Belum tepat, cuba fikir/rujuk semula.';
+    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Belum tepat, cuba fikir/rujuk semula.';
   }
 }
 
@@ -2909,7 +3003,7 @@ function openRingkasanQuestion(gate) {
 function checkRingkasanAnswer(gate, idx, q) {
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Ilmu penulisan bertambah.';
+    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Ilmu penulisan bertambah.';
     ringkasanSolved[gate.stationIndex] = true;
     coins += 15;
     document.getElementById('coin-text').innerText = coins;
@@ -2917,7 +3011,7 @@ function checkRingkasanAnswer(gate, idx, q) {
     saveProgress();
     setTimeout(() => { document.getElementById('question-box').style.display = 'none'; }, 900);
   } else {
-    feedback.style.color = '#f87171'; feedback.innerText = 'Belum tepat, cuba fikir/rujuk semula.';
+    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Belum tepat, cuba fikir/rujuk semula.';
   }
 }
 
@@ -2933,14 +3027,14 @@ function openOptionalNpcQuestion(optIndex) {
     btn.onclick = () => {
       const feedback = document.getElementById('feedback');
       if (idx === task.correct) {
-        feedback.style.color = '#4ade80'; feedback.innerText = `Betul! +${task.coinReward} koin!`;
+        feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = `Betul! +${task.coinReward} koin!`;
         optionalNpcSolved[optIndex] = true;
         coins += task.coinReward;
         document.getElementById('coin-text').innerText = coins;
         const npcObj = gates.find(g => g.type === 'optnpc' && g.optIndex === optIndex);
         // nota: sengaja TIDAK pudarkan imej NPC lepas soalan dijawab - kekal nampak normal/hidup
       } else {
-        feedback.style.color = '#f87171'; feedback.innerText = 'Tak tepat, cuba lagi lain kali!';
+        feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Tak tepat, cuba lagi lain kali!';
       }
       setTimeout(() => { document.getElementById('question-box').style.display = 'none'; }, 800);
     };
@@ -2968,13 +3062,13 @@ function checkAnswer(gate, idx) {
   const q = questionBank[gate.qIndex];
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul!';
+    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul!';
     setTimeout(() => {
       document.getElementById('question-box').style.display = 'none';
       awardPower(gate);
     }, 700);
   } else {
-    feedback.style.color = '#f87171'; feedback.innerText = 'Cuba lagi!';
+    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Cuba lagi!';
   }
 }
 
@@ -2985,6 +3079,7 @@ function awardPower(gate) {
   keysCollected++;
   document.getElementById('power-text').innerText = collectedPowers.filter(Boolean).length + '/' + totalNpcGates;
   document.getElementById('key-text').innerText = keysCollected;
+  playSfx('key');
   updateMissionText();
   const task = npcTasks[gate.qIndex];
   openDialog('Penjaga', `Ilmu diterima! Ini sebagai balasan: ${task.powerIcon} ${task.powerName} + 🗝️ Kunci Portal diperoleh!`, () => {
@@ -3046,13 +3141,13 @@ function checkOrderComplete(gate, task) {
   const feedback = document.getElementById('order-feedback');
   const correct = orderSelected.every((w, i) => w === task.sentence[i]);
   if (correct) {
-    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Ayat gramatis!';
+    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Ayat gramatis!';
     setTimeout(() => {
       document.getElementById('order-box').style.display = 'none';
       awardPower(gate);
     }, 700);
   } else {
-    feedback.style.color = '#f87171'; feedback.innerText = 'Susunan tersalah, cuba lagi!';
+    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Susunan tersalah, cuba lagi!';
     setTimeout(() => {
       orderSelected = [];
       renderOrderUI(gate, task);
@@ -3095,7 +3190,7 @@ function checkBossAnswer(idx) {
     const phaseJustWon = bossStep;
     bossStep++;
     if (bossStep >= bossQuestions.length) {
-      feedback.style.color = '#4ade80'; feedback.innerText = 'Kuasa Bahasa anda berjaya kalahkan Boss!';
+      feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Kuasa Bahasa anda berjaya kalahkan Boss!';
       bossDefeated = true;
       bossInBattle = false;
       shakeCamera(0.02);
@@ -3109,7 +3204,7 @@ function checkBossAnswer(idx) {
       document.getElementById('tahap-text').innerText = '3';
       setTimeout(() => { document.getElementById('question-box').style.display = 'none'; }, 1000);
     } else {
-      feedback.style.color = '#4ade80'; feedback.innerText = 'Betul!';
+      feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul!';
       setTimeout(() => {
         document.getElementById('question-box').style.display = 'none';
         openDialog('Raja Bayang', bossPhaseDialogs[phaseJustWon], () => {
@@ -3118,7 +3213,7 @@ function checkBossAnswer(idx) {
       }, 500);
     }
   } else {
-    feedback.style.color = '#f87171'; feedback.innerText = idx === -1 ? 'Masa tamat! Boss serang balik!' : 'Salah! Boss serang balik!';
+    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = idx === -1 ? 'Masa tamat! Boss serang balik!' : 'Salah! Boss serang balik!';
     if (Date.now() < invincibleUntil) {
       feedback.innerText += ' (Dilindungi Kuasa Invincible!)';
     } else {
@@ -3160,7 +3255,7 @@ function checkMiniBossAnswer(mb, idx) {
   const q = miniBossQuestions[mb.zoneIndex];
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Laluan terbuka!';
+    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Laluan terbuka!';
     mb.defeated = true;
     mb.obj.setTint(0x555555); mb.obj.setAlpha(0.5);
     setTimeout(() => {
@@ -3168,7 +3263,7 @@ function checkMiniBossAnswer(mb, idx) {
       mb.inBattle = false;
     }, 700);
   } else {
-    feedback.style.color = '#f87171'; feedback.innerText = idx === -1 ? 'Masa tamat! Bayangan serang!' : 'Salah! Bayangan serang!';
+    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = idx === -1 ? 'Masa tamat! Bayangan serang!' : 'Salah! Bayangan serang!';
     if (Date.now() < invincibleUntil) {
       feedback.innerText += ' (Dilindungi Kuasa Invincible!)';
     } else {
@@ -3229,7 +3324,7 @@ function checkRoamEnemyAnswer(re, idx, q) {
   clearBattleTimer();
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Musuh dikalahkan!';
+    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Musuh dikalahkan!';
     re.defeated = true;
     if (re.labelObj) { re.labelObj.destroy(); re.labelObj = null; }
     gates = gates.filter(g => g !== re.obj);
@@ -3240,7 +3335,7 @@ function checkRoamEnemyAnswer(re, idx, q) {
       re.inEncounter = false;
     }, 700);
   } else {
-    feedback.style.color = '#f87171'; feedback.innerText = idx === -1 ? 'Masa tamat! Musuh serang!' : 'Salah! Musuh serang!';
+    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = idx === -1 ? 'Masa tamat! Musuh serang!' : 'Salah! Musuh serang!';
     if (Date.now() < invincibleUntil) {
       feedback.innerText += ' (Dilindungi Kuasa Invincible!)';
     } else {
@@ -3276,7 +3371,7 @@ function checkScrollAnswer(gate, idx, q) {
   clearBattleTimer();
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Skrol bagi Kunci Ajaib!';
+    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Skrol bagi Kunci Ajaib!';
     gate.collected = true;
     scrollFlags[gate.scrollIndex] = true;
     scrollsCollected++;
@@ -3291,7 +3386,7 @@ function checkScrollAnswer(gate, idx, q) {
       }
     }, 800);
   } else {
-    feedback.style.color = '#f87171'; feedback.innerText = idx === -1 ? 'Masa tamat! Skrol bergegar!' : 'Salah! Skrol bergegar!';
+    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = idx === -1 ? 'Masa tamat! Skrol bergegar!' : 'Salah! Skrol bergegar!';
     if (Date.now() < invincibleUntil) {
       feedback.innerText += ' (Dilindungi Kuasa Invincible!)';
     } else {
@@ -3336,10 +3431,12 @@ function loseHp(amount) {
   if (amount === undefined) amount = 2; // default: 1 hati penuh
   hp = Math.max(0, hp - amount);
   document.getElementById('hp-text').innerText = hp + '/' + maxHp;
+  playSfx('hit');
   if (hp <= 0) {
     setTimeout(() => {
       document.getElementById('question-box').style.display = 'none';
       document.getElementById('gameover-box').style.display = 'flex';
+      playSfx('gameover');
     }, 600);
   }
 }
