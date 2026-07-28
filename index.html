@@ -48,14 +48,8 @@
     justify-content: center; font-size: 18px; z-index: 6; cursor: pointer;
   }
 
-  #sfx-toggle-btn {
-    position: absolute; top: 160px; right: 12px; width: 42px; height: 42px; border-radius: 10px;
-    background: rgba(20,30,55,0.9); border: 2px solid #3a5a8a; display: flex; align-items: center;
-    justify-content: center; font-size: 18px; z-index: 6; cursor: pointer;
-  }
-
   #menu-btn {
-    position: absolute; top: 210px; right: 12px; width: 42px; height: 42px; border-radius: 10px;
+    position: absolute; top: 160px; right: 12px; width: 42px; height: 42px; border-radius: 10px;
     background: rgba(20,30,55,0.9); border: 2px solid #3a5a8a; display: flex; align-items: center;
     justify-content: center; font-size: 18px; z-index: 6; cursor: pointer;
   }
@@ -73,13 +67,11 @@
     display: block; width: 100%; margin: 8px 0; padding: 12px; border-radius: 10px; border: none;
     font-size: 15px; font-weight: bold; cursor: pointer;
   }
-  #menu-exit-btn { background: #c0392b; color: #fff; }
-  #menu-admin-btn { background: #2b6a3e; color: #fff; }
+  #menu-hub-menu-btn { background: #8a6a2f; color: #fff; }
   #menu-reset-btn { background: #b8860b; color: #fff; }
   #menu-cancel-btn { background: #444; color: #fff; }
   #menu-reset-confirm-yes { background: #b8860b; color: #fff; }
   #menu-reset-confirm-no { background: #444; color: #fff; }
-  #menu-exit-msg { font-size: 13px; color: #ccc; margin-top: 10px; display: none; }
 
   #worldmap-screen {
     display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
@@ -244,6 +236,8 @@
   #menu-play-btn:hover { filter: brightness(1.1); }
   #menu-howto-btn { background: linear-gradient(180deg, #3a7ac9, #2a5a9a); }
   #menu-howto-btn:hover { filter: brightness(1.1); }
+  #menu-hub-btn { background: linear-gradient(180deg, #8a6a2f, #6a4e1f); }
+  #menu-hub-btn:hover { filter: brightness(1.1); }
   #menu-loading { display: none; color: #ffd76b; font-size: 13px; }
   #menu-quote-author { color: #ffcc33; font-style: normal; font-weight: bold; }
 
@@ -264,63 +258,9 @@
     display: block; margin: 14px auto 0; padding: 12px 30px; font-size: 15px; font-weight: bold;
     border-radius: 8px; border: none; background: #7a3a3a; color: white; cursor: pointer;
   }
-
-  /* ===== IKS EduGames Splash ===== */
-  #brandSplash {
-    position: fixed; inset: 0; z-index: 20000;
-    background: radial-gradient(ellipse at center, #1e3a5f 0%, #0a1420 100%);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center;
-    animation: brandFadeOut 0.6s ease-in 3s forwards;
-  }
-  #brandSplash.skip { animation: brandFadeOut 0.4s ease-in forwards; }
-  @keyframes brandFadeOut { to { opacity: 0; visibility: hidden; pointer-events: none; } }
-  .brand-glow {
-    position: absolute; width: 340px; height: 340px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,204,51,0.25), transparent 70%);
-    animation: brandPulse 2.4s ease-in-out infinite;
-  }
-  @keyframes brandPulse { 0%,100% { transform: scale(0.9); opacity: 0.6; } 50% { transform: scale(1.15); opacity: 1; } }
-  .brand-icons {
-    font-size: 26px; margin-bottom: 6px; opacity: 0; letter-spacing: 8px;
-    animation: brandIn 0.6s ease-out 0.1s forwards;
-  }
-  .brand-name {
-    font-size: 40px; font-weight: bold; letter-spacing: 1px; font-family: 'Segoe UI', Arial, sans-serif;
-    color: #ffcc33; text-shadow: 0 4px 0 #8a6a2f, 0 8px 18px rgba(0,0,0,0.6);
-    opacity: 0; animation: brandIn 0.7s ease-out 0.3s forwards;
-  }
-  .brand-name span { color: #fff; text-shadow: 0 3px 0 #1e6fb0, 0 6px 14px rgba(0,0,0,0.6); }
-  .brand-tagline {
-    margin-top: 10px; font-size: 14px; color: #7fd4ff; letter-spacing: 0.5px;
-    opacity: 0; animation: brandIn 0.7s ease-out 0.55s forwards;
-  }
-  .brand-presents {
-    position: absolute; bottom: 60px; font-size: 12px; color: #5a7a9a;
-    letter-spacing: 2px; text-transform: uppercase;
-    opacity: 0; animation: brandIn 0.7s ease-out 0.8s forwards;
-  }
-  @keyframes brandIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 <body>
-
-<div id="brandSplash">
-  <div class="brand-glow"></div>
-  <div class="brand-icons">🎮 📖 ⚔️</div>
-  <div class="brand-name">IKS <span>EduGames</span></div>
-  <div class="brand-tagline">Belajar Bermain. Bermain Belajar.</div>
-  <div class="brand-presents">mempersembahkan</div>
-</div>
-<script>
-  (function () {
-    const splash = document.getElementById("brandSplash");
-    if (!splash) return;
-    const remove = () => splash.remove();
-    splash.addEventListener("animationend", (e) => { if (e.target === splash) remove(); });
-    setTimeout(remove, 3900);
-  })();
-</script>
 
 <div id="main-menu">
   <div class="menu-decor-row">🏰 📖 ⚔️ 🗝️ 🌿</div>
@@ -329,7 +269,7 @@
   <div id="menu-buttons">
     <button id="menu-play-btn">▶️ Main Sekarang</button>
     <button id="menu-howto-btn">📖 Cara Bermain</button>
-    <button id="menu-portal-main-btn" style="background: linear-gradient(180deg, #ffd75e, #8a6a2f); color:#2a1a00;">🏠 Portal Utama</button>
+    <button id="menu-hub-btn">🏠 Portal Utama</button>
   </div>
   <p id="menu-loading">Memuatkan aset...</p>
   <div id="menu-quote">
@@ -366,16 +306,13 @@
 
   <div id="worldmap-btn">🗺️</div>
   <div id="music-toggle-btn">🔊</div>
-  <div id="sfx-toggle-btn">🔔</div>
   <div id="menu-btn">☰</div>
   <div id="menu-screen">
     <div id="menu-box">
       <h2 id="menu-title">☰ Menu</h2>
       <div id="menu-main-options">
-        <button id="menu-admin-btn">🔓 Mode Admin: OFF</button>
         <button id="menu-reset-btn">🔄 Mula Semula (Set Semula Progres)</button>
-        <button id="menu-exit-btn">🚪 Keluar dari Permainan</button>
-        <button id="menu-portal-btn" style="background:#8a6a2f; color:#fff;">🏠 Portal Utama</button>
+        <button id="menu-hub-menu-btn">🏠 Portal Utama</button>
         <button id="menu-cancel-btn">Batal</button>
       </div>
       <div id="menu-reset-confirm" style="display:none;">
@@ -383,7 +320,6 @@
         <button id="menu-reset-confirm-yes">Ya, Set Semula</button>
         <button id="menu-reset-confirm-no">Batal</button>
       </div>
-      <div id="menu-exit-msg">Progres anda dah disimpan. Sila tutup tab/app ini secara manual untuk keluar sepenuhnya.</div>
     </div>
   </div>
 
@@ -444,7 +380,6 @@
     <h2>Nyawa Habis!</h2>
     <p>Cuba lagi ya.</p>
     <button onclick="location.reload()">Main Semula</button>
-    <button id="gameover-portal-btn" style="background:#8a6a2f; color:#fff;">🏠 Portal Utama</button>
   </div>
 
   <div id="credit-footer">Dibuat dengan kasih sayang oleh Cikgu Ikhwan x Claude</div>
@@ -466,8 +401,8 @@
 
 <script>
 // ====== ASSET SEBENAR (Cute Fantasy pack, embed sebagai base64) ======
-const ASSET_PLAYER = 'data:image/png;base64,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';
-const ASSET_PLAYER_IDLE = 'data:image/png;base64,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';
+const ASSET_PLAYER = 'data:image/png;base64,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';
+const ASSET_PLAYER_IDLE = 'data:image/png;base64,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';
 const ASSET_GRASS = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAB1JREFUOI1jDJid9p+BAsBEieZRA0YNGDVgMBkAAKPjAnCZ8AItAAAAAElFTkSuQmCC'; // upgrade: Mystic Woods pack
 const ASSET_WATER = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAHUlEQVR4nGNkmHn7PwMFgIkSzaMGjBowasBgMgAAMRcCkywgClYAAAAASUVORK5CYII='; // upgrade: Sunnyside World pack
 const ASSET_DIRTPATH = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAX0lEQVR4nGOcGhfwn4ECwESJZqIN+P39G/kGwDTjMoQJWSE2RaycXCg0VgOQNeIzBK8LyAVM6Dbgsw0GkF3JQopGbGrpkw7oYwC+1IYOkNMM3ABSAhEZsBBWggmoGgsAPcMjNqLZD+wAAAAASUVORK5CYII='; // upgrade: Sunnyside World pack
@@ -1002,10 +937,10 @@ document.getElementById('shop-buy-btn').addEventListener('click', () => {
     document.getElementById('coin-text').innerText = coins;
     document.getElementById('hp-text').innerText = hp + '/' + maxHp;
     document.getElementById('shop-coin-text').innerText = 'Koin anda: ' + coins;
-    feedback.style.color = '#4ade80'; playSfx('correct');
+    feedback.style.color = '#4ade80';
     feedback.innerText = 'Berjaya beli! Nyawa maksimum naik ke ' + maxHp + '.';
   } else {
-    feedback.style.color = '#f87171'; playSfx('wrong');
+    feedback.style.color = '#f87171';
     feedback.innerText = 'Koin tak cukup! Kumpul lagi koin dalam peta.';
   }
 });
@@ -1016,10 +951,10 @@ document.getElementById('shop-buy-skip-btn').addEventListener('click', () => {
     skipCharges++;
     document.getElementById('coin-text').innerText = coins;
     document.getElementById('shop-coin-text').innerText = 'Koin anda: ' + coins;
-    feedback.style.color = '#4ade80'; playSfx('correct');
+    feedback.style.color = '#4ade80';
     feedback.innerText = `Berjaya beli! Caj Skip Soalan: ${skipCharges}.`;
   } else {
-    feedback.style.color = '#f87171'; playSfx('wrong');
+    feedback.style.color = '#f87171';
     feedback.innerText = 'Koin tak cukup! Kumpul lagi koin dalam peta.';
   }
 });
@@ -1030,10 +965,10 @@ document.getElementById('shop-buy-invincible-btn').addEventListener('click', () 
     invincibleUntil = Date.now() + 20000;
     document.getElementById('coin-text').innerText = coins;
     document.getElementById('shop-coin-text').innerText = 'Koin anda: ' + coins;
-    feedback.style.color = '#4ade80'; playSfx('correct');
+    feedback.style.color = '#4ade80';
     feedback.innerText = 'Kuasa Invincible aktif selama 20 saat!';
   } else {
-    feedback.style.color = '#f87171'; playSfx('wrong');
+    feedback.style.color = '#f87171';
     feedback.innerText = 'Koin tak cukup! Kumpul lagi koin dalam peta.';
   }
 });
@@ -1352,102 +1287,11 @@ function toggleMusic() {
   document.getElementById('music-toggle-btn').innerText = musicEnabled ? '🔊' : '🔇';
 }
 document.getElementById('music-toggle-btn').addEventListener('click', toggleMusic);
-document.getElementById('sfx-toggle-btn').addEventListener('click', toggleSfx);
-
-// ====== SFX (kesan bunyi dijana procedural guna Web Audio API - tiada fail luar, sama prinsip macam muzik latar) ======
-let sfxGain = null;
-let sfxEnabled = true;
-function ensureSfxGain() {
-  if (!audioCtx) return null;
-  if (!sfxGain) {
-    sfxGain = audioCtx.createGain();
-    sfxGain.gain.value = sfxEnabled ? 0.5 : 0;
-    sfxGain.connect(audioCtx.destination);
-  }
-  return sfxGain;
-}
-// Nada tunggal (oscillator) - untuk chime, bip, tone naik/turun
-function sfxTone(freq, startOffset, duration, type, vol, glideTo) {
-  const gainNode = ensureSfxGain();
-  if (!gainNode) return;
-  const t0 = audioCtx.currentTime + startOffset;
-  const osc = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  osc.type = type || 'sine';
-  osc.frequency.setValueAtTime(freq, t0);
-  if (glideTo) osc.frequency.exponentialRampToValueAtTime(glideTo, t0 + duration);
-  g.gain.setValueAtTime(0, t0);
-  g.gain.linearRampToValueAtTime(vol, t0 + 0.015);
-  g.gain.exponentialRampToValueAtTime(0.001, t0 + duration);
-  osc.connect(g); g.connect(gainNode);
-  osc.start(t0); osc.stop(t0 + duration + 0.05);
-}
-// Bunyi noise (letupan pendek / gesekan) - asas untuk impact, pecah, tarik lastik
-let sfxNoiseBuffer = null;
-function getNoiseBuffer() {
-  if (sfxNoiseBuffer) return sfxNoiseBuffer;
-  const len = audioCtx.sampleRate * 1;
-  const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
-  const data = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
-  sfxNoiseBuffer = buf;
-  return buf;
-}
-function sfxNoise(startOffset, duration, vol, filterFreq, filterType) {
-  const gainNode = ensureSfxGain();
-  if (!gainNode) return;
-  const t0 = audioCtx.currentTime + startOffset;
-  const src = audioCtx.createBufferSource();
-  src.buffer = getNoiseBuffer();
-  const filt = audioCtx.createBiquadFilter();
-  filt.type = filterType || 'lowpass';
-  filt.frequency.setValueAtTime(filterFreq || 1200, t0);
-  const g = audioCtx.createGain();
-  g.gain.setValueAtTime(0, t0);
-  g.gain.linearRampToValueAtTime(vol, t0 + 0.01);
-  g.gain.exponentialRampToValueAtTime(0.001, t0 + duration);
-  src.connect(filt); filt.connect(g); g.connect(gainNode);
-  src.start(t0); src.stop(t0 + duration + 0.05);
-}
-// Katalog SFX - satu tempat untuk semua kesan bunyi permainan (BM Quest sahaja - Kosa Rimba & Slice Kata tunggu dulu)
-const SFX_LIB = {
-  correct: () => { sfxTone(523.25, 0, 0.12, 'triangle', 0.35); sfxTone(783.99, 0.09, 0.22, 'triangle', 0.35); },
-  wrong: () => { sfxTone(220, 0, 0.16, 'sawtooth', 0.25, 140); sfxTone(160, 0.12, 0.22, 'sawtooth', 0.2, 100); },
-  coin: () => { sfxTone(987.77, 0, 0.06, 'square', 0.22); sfxTone(1318.51, 0.05, 0.14, 'square', 0.22); },
-  pickup: () => { sfxTone(660, 0, 0.08, 'triangle', 0.3, 990); },
-  key: () => { sfxTone(440, 0, 0.09, 'square', 0.25); sfxTone(660, 0.07, 0.09, 'square', 0.25); sfxTone(880, 0.14, 0.18, 'square', 0.28); },
-  hit: () => { sfxNoise(0, 0.14, 0.4, 400, 'lowpass'); sfxTone(140, 0, 0.14, 'sawtooth', 0.25, 60); },
-  gameover: () => { sfxTone(392, 0, 0.2, 'sawtooth', 0.3, 260); sfxTone(294, 0.18, 0.22, 'sawtooth', 0.28, 180); sfxTone(196, 0.38, 0.4, 'sawtooth', 0.28, 90); },
-  door: () => { sfxNoise(0, 0.3, 0.18, 500, 'lowpass'); sfxTone(180, 0, 0.3, 'sine', 0.2, 90); },
-  click: () => { sfxTone(700, 0, 0.05, 'square', 0.15); },
-  // --- placeholder untuk mekanik akan datang (lastik/binaan kayu) - tinggal panggil bila mekanik siap ---
-  slingPull: () => { sfxNoise(0, 0.18, 0.16, 900, 'bandpass'); },
-  slingRelease: () => { sfxTone(300, 0, 0.1, 'sawtooth', 0.3, 900); },
-  woodImpact: () => { sfxNoise(0, 0.1, 0.35, 350, 'lowpass'); sfxTone(110, 0, 0.08, 'triangle', 0.2, 70); },
-  woodBreak: () => { sfxNoise(0, 0.22, 0.4, 700, 'lowpass'); sfxNoise(0.03, 0.18, 0.3, 1800, 'highpass'); }
-};
-function playSfx(name) {
-  if (!audioCtx || !sfxEnabled) return;
-  const fn = SFX_LIB[name];
-  if (fn) { try { fn(); } catch (e) {} }
-}
-function toggleSfx() {
-  sfxEnabled = !sfxEnabled;
-  if (sfxGain) sfxGain.gain.value = sfxEnabled ? 0.5 : 0;
-  const btn = document.getElementById('sfx-toggle-btn');
-  if (btn) btn.innerText = sfxEnabled ? '🔔' : '🔕';
-}
 
 document.getElementById('menu-btn').addEventListener('click', () => {
-  document.getElementById('menu-exit-msg').style.display = 'none';
   document.getElementById('menu-main-options').style.display = 'block';
   document.getElementById('menu-reset-confirm').style.display = 'none';
-  document.getElementById('menu-admin-btn').innerText = adminMode ? '🔓 Mode Admin: ON' : '🔓 Mode Admin: OFF';
   document.getElementById('menu-screen').style.display = 'flex';
-});
-document.getElementById('menu-admin-btn').addEventListener('click', () => {
-  adminMode = !adminMode;
-  document.getElementById('menu-admin-btn').innerText = adminMode ? '🔓 Mode Admin: ON' : '🔓 Mode Admin: OFF';
 });
 document.getElementById('menu-cancel-btn').addEventListener('click', () => {
   document.getElementById('menu-screen').style.display = 'none';
@@ -1464,23 +1308,7 @@ document.getElementById('menu-reset-confirm-yes').addEventListener('click', () =
   try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
   location.reload();
 });
-document.getElementById('menu-exit-btn').addEventListener('click', () => {
-  try { saveProgress(); } catch (e) {}
-  window.close();
-  // Kalau window.close() disekat oleh browser (kebiasaan bila tab bukan dibuka via script), tunjuk mesej fallback
-  setTimeout(() => {
-    document.getElementById('menu-exit-msg').style.display = 'block';
-  }, 300);
-});
-document.getElementById('menu-portal-btn').addEventListener('click', () => {
-  try { saveProgress(); } catch (e) {}
-  window.location.href = 'https://cikguikhwansuhaimi.github.io/';
-});
-document.getElementById('menu-portal-main-btn').addEventListener('click', () => {
-  try { saveProgress(); } catch (e) {}
-  window.location.href = 'https://cikguikhwansuhaimi.github.io/';
-});
-document.getElementById('gameover-portal-btn').addEventListener('click', () => {
+document.getElementById('menu-hub-menu-btn').addEventListener('click', () => {
   try { saveProgress(); } catch (e) {}
   window.location.href = 'https://cikguikhwansuhaimi.github.io/';
 });
@@ -1515,6 +1343,9 @@ document.getElementById('menu-play-btn').addEventListener('click', () => {
 document.getElementById('menu-howto-btn').addEventListener('click', () => {
   document.getElementById('howto-screen').style.display = 'flex';
 });
+document.getElementById('menu-hub-btn').addEventListener('click', () => {
+  window.location.href = 'https://cikguikhwansuhaimi.github.io/';
+});
 document.getElementById('howto-back-btn').addEventListener('click', () => {
   document.getElementById('howto-screen').style.display = 'none';
 });
@@ -1547,13 +1378,13 @@ function registerRealTextures(scene) {
   if (loadedImages.house) scene.textures.addImage('house', loadedImages.house);
   if (loadedImages.chestimg) scene.textures.addImage('chestimg', loadedImages.chestimg);
   if (loadedImages.cliff) scene.textures.addImage('cliff', loadedImages.cliff);
-  if (loadedImages.player) scene.textures.addSpriteSheet('player', loadedImages.player, { frameWidth: 18, frameHeight: 22 });
-  if (loadedImages['player-idle']) scene.textures.addSpriteSheet('player-idle', loadedImages['player-idle'], { frameWidth: 20, frameHeight: 22 });
+  if (loadedImages.player) scene.textures.addSpriteSheet('player', loadedImages.player, { frameWidth: 64, frameHeight: 64 });
+  if (loadedImages['player-idle']) scene.textures.addSpriteSheet('player-idle', loadedImages['player-idle'], { frameWidth: 64, frameHeight: 64 });
   if (scene.textures.exists('player') && !scene.anims.exists('anim_player_walk')) {
-    scene.anims.create({ key: 'anim_player_walk', frames: scene.anims.generateFrameNumbers('player', { start: 0, end: 7 }), frameRate: 10, repeat: -1 });
+    scene.anims.create({ key: 'anim_player_walk', frames: scene.anims.generateFrameNumbers('player', { start: 0, end: 1 }), frameRate: 6, repeat: -1 });
   }
   if (scene.textures.exists('player-idle') && !scene.anims.exists('anim_player_idle')) {
-    scene.anims.create({ key: 'anim_player_idle', frames: scene.anims.generateFrameNumbers('player-idle', { start: 0, end: 8 }), frameRate: 6, repeat: -1 });
+    scene.anims.create({ key: 'anim_player_idle', frames: scene.anims.generateFrameNumbers('player-idle', { start: 0, end: 3 }), frameRate: 6, repeat: -1 });
   }
   if (loadedImages.skeleton) scene.textures.addSpriteSheet('skeleton', loadedImages.skeleton, { frameWidth: 32, frameHeight: 32 });
   if (loadedImages.slime) scene.textures.addSpriteSheet('slime', loadedImages.slime, { frameWidth: 32, frameHeight: 32 });
@@ -1905,7 +1736,7 @@ function buildHub(scene) {
   // ===== WATAK UTAMA (sprite sebenar) =====
   player = scene.physics.add.sprite(220, 320, 'player', 0);
   player.setCollideWorldBounds(true);
-  player.setScale(2.3);
+  player.setScale(1.8);
   player.play('anim_player_idle');
 
   // ===== KAMERA & MINIMAP =====
@@ -2288,7 +2119,7 @@ function buildPortal1(scene) {
   // ===== WATAK UTAMA - spawn dekat pintu masuk =====
   player = scene.physics.add.sprite(100, 180, 'player', 0);
   player.setCollideWorldBounds(true);
-  player.setScale(2.3);
+  player.setScale(1.8);
   player.play('anim_player_idle');
 
   // ===== KAMERA & MINIMAP =====
@@ -2454,7 +2285,7 @@ function buildPortal2(scene) {
   // ===== WATAK UTAMA - spawn dekat pondok Tok =====
   player = scene.physics.add.sprite(120, 130, 'player', 0);
   player.setCollideWorldBounds(true);
-  player.setScale(2.3);
+  player.setScale(1.8);
   player.play('anim_player_idle');
 
   // ===== KAMERA & MINIMAP =====
@@ -2594,7 +2425,7 @@ function buildPortal3(scene) {
   // ===== WATAK UTAMA =====
   player = scene.physics.add.sprite(80, 350, 'player', 0);
   player.setCollideWorldBounds(true);
-  player.setScale(2.3);
+  player.setScale(1.8);
   player.play('anim_player_idle');
 
   // ===== KAMERA & MINIMAP =====
@@ -2708,7 +2539,7 @@ function buildPortal4(scene) {
   // ===== WATAK UTAMA - masuk dari pintu depan (atas) =====
   player = scene.physics.add.sprite(PORTAL4_W / 2, 110, 'player', 0);
   player.setCollideWorldBounds(true);
-  player.setScale(2.3);
+  player.setScale(1.8);
   player.play('anim_player_idle');
 
   // ===== KAMERA & MINIMAP =====
@@ -2823,7 +2654,6 @@ function updateHub() {
       c.obj.setVisible(false);
       coins++;
       document.getElementById('coin-text').innerText = coins;
-      playSfx('coin');
     }
   });
   fetchItems.forEach(f => {
@@ -2833,7 +2663,6 @@ function updateHub() {
       f.obj.setVisible(false);
       fetchCollected++;
       updateMissionText();
-      playSfx('pickup');
     }
   });
 
@@ -2975,13 +2804,13 @@ function openRohQuestion(gate) {
 function checkRohAnswer(gate, idx, q) {
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Terima kasih sudah bantu saya.';
+    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Terima kasih sudah bantu saya.';
     rohHelped[gate.zoneIndex] = true;
     gate.setTint(0xffffff); gate.setAlpha(0.35);
     updateMissionText();
     setTimeout(() => { document.getElementById('question-box').style.display = 'none'; }, 900);
   } else {
-    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Belum tepat, cuba fikir/rujuk semula.';
+    feedback.style.color = '#f87171'; feedback.innerText = 'Belum tepat, cuba fikir/rujuk semula.';
   }
 }
 
@@ -3005,7 +2834,7 @@ function banditTimeout(gate) {
   clearBattleTimer();
   loseHp(1);
   const feedback = document.getElementById('feedback');
-  feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Masa tamat! ' + banditNames[gate.stageIndex] + ' serang - nyawa berkurang. Cuba lagi!';
+  feedback.style.color = '#f87171'; feedback.innerText = 'Masa tamat! ' + banditNames[gate.stageIndex] + ' serang - nyawa berkurang. Cuba lagi!';
   shakeCamera(0.01);
   setTimeout(() => { if (hp > 0) openBanditQuestion(gate); }, 1100);
 }
@@ -3014,7 +2843,7 @@ function checkBanditAnswer(gate, idx, q) {
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
     clearBattleTimer();
-    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! ' + banditNames[gate.stageIndex] + ' berundur.';
+    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! ' + banditNames[gate.stageIndex] + ' berundur.';
     banditDefeated[gate.stageIndex] = true;
     gate.setTint(0x888888); gate.setAlpha(0.4);
     updateMissionText();
@@ -3027,7 +2856,7 @@ function checkBanditAnswer(gate, idx, q) {
     setTimeout(() => { document.getElementById('question-box').style.display = 'none'; }, 900);
   } else {
     loseHp(1);
-    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Belum tepat - nyawa berkurang! Cuba lagi.';
+    feedback.style.color = '#f87171'; feedback.innerText = 'Belum tepat - nyawa berkurang! Cuba lagi.';
     shakeCamera(0.01);
   }
 }
@@ -3050,7 +2879,7 @@ function openKomsasQuestion(gate) {
 function checkKomsasAnswer(gate, idx, q) {
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Ilmu KOMSAS bertambah.';
+    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Ilmu KOMSAS bertambah.';
     komsasSolved[gate.stationIndex] = true;
     coins += 15;
     document.getElementById('coin-text').innerText = coins;
@@ -3058,7 +2887,7 @@ function checkKomsasAnswer(gate, idx, q) {
     saveProgress();
     setTimeout(() => { document.getElementById('question-box').style.display = 'none'; }, 900);
   } else {
-    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Belum tepat, cuba fikir/rujuk semula.';
+    feedback.style.color = '#f87171'; feedback.innerText = 'Belum tepat, cuba fikir/rujuk semula.';
   }
 }
 
@@ -3080,7 +2909,7 @@ function openRingkasanQuestion(gate) {
 function checkRingkasanAnswer(gate, idx, q) {
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Ilmu penulisan bertambah.';
+    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Ilmu penulisan bertambah.';
     ringkasanSolved[gate.stationIndex] = true;
     coins += 15;
     document.getElementById('coin-text').innerText = coins;
@@ -3088,7 +2917,7 @@ function checkRingkasanAnswer(gate, idx, q) {
     saveProgress();
     setTimeout(() => { document.getElementById('question-box').style.display = 'none'; }, 900);
   } else {
-    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Belum tepat, cuba fikir/rujuk semula.';
+    feedback.style.color = '#f87171'; feedback.innerText = 'Belum tepat, cuba fikir/rujuk semula.';
   }
 }
 
@@ -3104,14 +2933,14 @@ function openOptionalNpcQuestion(optIndex) {
     btn.onclick = () => {
       const feedback = document.getElementById('feedback');
       if (idx === task.correct) {
-        feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = `Betul! +${task.coinReward} koin!`;
+        feedback.style.color = '#4ade80'; feedback.innerText = `Betul! +${task.coinReward} koin!`;
         optionalNpcSolved[optIndex] = true;
         coins += task.coinReward;
         document.getElementById('coin-text').innerText = coins;
         const npcObj = gates.find(g => g.type === 'optnpc' && g.optIndex === optIndex);
         // nota: sengaja TIDAK pudarkan imej NPC lepas soalan dijawab - kekal nampak normal/hidup
       } else {
-        feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Tak tepat, cuba lagi lain kali!';
+        feedback.style.color = '#f87171'; feedback.innerText = 'Tak tepat, cuba lagi lain kali!';
       }
       setTimeout(() => { document.getElementById('question-box').style.display = 'none'; }, 800);
     };
@@ -3139,13 +2968,13 @@ function checkAnswer(gate, idx) {
   const q = questionBank[gate.qIndex];
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul!';
+    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul!';
     setTimeout(() => {
       document.getElementById('question-box').style.display = 'none';
       awardPower(gate);
     }, 700);
   } else {
-    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Cuba lagi!';
+    feedback.style.color = '#f87171'; feedback.innerText = 'Cuba lagi!';
   }
 }
 
@@ -3156,7 +2985,6 @@ function awardPower(gate) {
   keysCollected++;
   document.getElementById('power-text').innerText = collectedPowers.filter(Boolean).length + '/' + totalNpcGates;
   document.getElementById('key-text').innerText = keysCollected;
-  playSfx('key');
   updateMissionText();
   const task = npcTasks[gate.qIndex];
   openDialog('Penjaga', `Ilmu diterima! Ini sebagai balasan: ${task.powerIcon} ${task.powerName} + 🗝️ Kunci Portal diperoleh!`, () => {
@@ -3218,13 +3046,13 @@ function checkOrderComplete(gate, task) {
   const feedback = document.getElementById('order-feedback');
   const correct = orderSelected.every((w, i) => w === task.sentence[i]);
   if (correct) {
-    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Ayat gramatis!';
+    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Ayat gramatis!';
     setTimeout(() => {
       document.getElementById('order-box').style.display = 'none';
       awardPower(gate);
     }, 700);
   } else {
-    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = 'Susunan tersalah, cuba lagi!';
+    feedback.style.color = '#f87171'; feedback.innerText = 'Susunan tersalah, cuba lagi!';
     setTimeout(() => {
       orderSelected = [];
       renderOrderUI(gate, task);
@@ -3267,7 +3095,7 @@ function checkBossAnswer(idx) {
     const phaseJustWon = bossStep;
     bossStep++;
     if (bossStep >= bossQuestions.length) {
-      feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Kuasa Bahasa anda berjaya kalahkan Boss!';
+      feedback.style.color = '#4ade80'; feedback.innerText = 'Kuasa Bahasa anda berjaya kalahkan Boss!';
       bossDefeated = true;
       bossInBattle = false;
       shakeCamera(0.02);
@@ -3281,7 +3109,7 @@ function checkBossAnswer(idx) {
       document.getElementById('tahap-text').innerText = '3';
       setTimeout(() => { document.getElementById('question-box').style.display = 'none'; }, 1000);
     } else {
-      feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul!';
+      feedback.style.color = '#4ade80'; feedback.innerText = 'Betul!';
       setTimeout(() => {
         document.getElementById('question-box').style.display = 'none';
         openDialog('Raja Bayang', bossPhaseDialogs[phaseJustWon], () => {
@@ -3290,7 +3118,7 @@ function checkBossAnswer(idx) {
       }, 500);
     }
   } else {
-    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = idx === -1 ? 'Masa tamat! Boss serang balik!' : 'Salah! Boss serang balik!';
+    feedback.style.color = '#f87171'; feedback.innerText = idx === -1 ? 'Masa tamat! Boss serang balik!' : 'Salah! Boss serang balik!';
     if (Date.now() < invincibleUntil) {
       feedback.innerText += ' (Dilindungi Kuasa Invincible!)';
     } else {
@@ -3332,7 +3160,7 @@ function checkMiniBossAnswer(mb, idx) {
   const q = miniBossQuestions[mb.zoneIndex];
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Laluan terbuka!';
+    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Laluan terbuka!';
     mb.defeated = true;
     mb.obj.setTint(0x555555); mb.obj.setAlpha(0.5);
     setTimeout(() => {
@@ -3340,7 +3168,7 @@ function checkMiniBossAnswer(mb, idx) {
       mb.inBattle = false;
     }, 700);
   } else {
-    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = idx === -1 ? 'Masa tamat! Bayangan serang!' : 'Salah! Bayangan serang!';
+    feedback.style.color = '#f87171'; feedback.innerText = idx === -1 ? 'Masa tamat! Bayangan serang!' : 'Salah! Bayangan serang!';
     if (Date.now() < invincibleUntil) {
       feedback.innerText += ' (Dilindungi Kuasa Invincible!)';
     } else {
@@ -3401,7 +3229,7 @@ function checkRoamEnemyAnswer(re, idx, q) {
   clearBattleTimer();
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Musuh dikalahkan!';
+    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Musuh dikalahkan!';
     re.defeated = true;
     if (re.labelObj) { re.labelObj.destroy(); re.labelObj = null; }
     gates = gates.filter(g => g !== re.obj);
@@ -3412,7 +3240,7 @@ function checkRoamEnemyAnswer(re, idx, q) {
       re.inEncounter = false;
     }, 700);
   } else {
-    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = idx === -1 ? 'Masa tamat! Musuh serang!' : 'Salah! Musuh serang!';
+    feedback.style.color = '#f87171'; feedback.innerText = idx === -1 ? 'Masa tamat! Musuh serang!' : 'Salah! Musuh serang!';
     if (Date.now() < invincibleUntil) {
       feedback.innerText += ' (Dilindungi Kuasa Invincible!)';
     } else {
@@ -3448,7 +3276,7 @@ function checkScrollAnswer(gate, idx, q) {
   clearBattleTimer();
   const feedback = document.getElementById('feedback');
   if (idx === q.correct) {
-    feedback.style.color = '#4ade80'; playSfx('correct'); feedback.innerText = 'Betul! Skrol bagi Kunci Ajaib!';
+    feedback.style.color = '#4ade80'; feedback.innerText = 'Betul! Skrol bagi Kunci Ajaib!';
     gate.collected = true;
     scrollFlags[gate.scrollIndex] = true;
     scrollsCollected++;
@@ -3463,7 +3291,7 @@ function checkScrollAnswer(gate, idx, q) {
       }
     }, 800);
   } else {
-    feedback.style.color = '#f87171'; playSfx('wrong'); feedback.innerText = idx === -1 ? 'Masa tamat! Skrol bergegar!' : 'Salah! Skrol bergegar!';
+    feedback.style.color = '#f87171'; feedback.innerText = idx === -1 ? 'Masa tamat! Skrol bergegar!' : 'Salah! Skrol bergegar!';
     if (Date.now() < invincibleUntil) {
       feedback.innerText += ' (Dilindungi Kuasa Invincible!)';
     } else {
@@ -3508,12 +3336,10 @@ function loseHp(amount) {
   if (amount === undefined) amount = 2; // default: 1 hati penuh
   hp = Math.max(0, hp - amount);
   document.getElementById('hp-text').innerText = hp + '/' + maxHp;
-  playSfx('hit');
   if (hp <= 0) {
     setTimeout(() => {
       document.getElementById('question-box').style.display = 'none';
       document.getElementById('gameover-box').style.display = 'flex';
-      playSfx('gameover');
     }, 600);
   }
 }
